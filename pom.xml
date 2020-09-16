@@ -50,9 +50,16 @@
 			<artifactId>jts-core</artifactId>
 			<version>1.14.0</version>
 		</dependency>
-
-
-
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-swing</artifactId>
+			<version>15-ea+6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-controls</artifactId>
+			<version>15-ea+6</version>
+		</dependency>
 
 
 	</dependencies>
