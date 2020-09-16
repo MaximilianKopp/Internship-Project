@@ -1,21 +1,21 @@
 package org.hs.mainz.praktikum.finalversion;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.stream.IntStream;
 
 import org.hs.mainz.praktikum.finalversion.CSVReader;
 
 public class Analysis {
-	int size = CSVReader.storage().size();
+	final int size = CSVReader.storage().size();
 
-	double[] dateGregYear = new double[size];
-	double[] xCoordinate = new double[size];
-	double[] yCoordinate = new double[size];
+	final double[] dateGregYear = new double[size];
+	final double[] xCoordinate = new double[size];
+	final double[] yCoordinate = new double[size];
 
-	public int noEntry() throws FileNotFoundException, IOException {
+	public int noEntry() {
 		int noEntry = 0;
-		for (int i = 0; i < dateGregYear.length; i++) {
-			if (dateGregYear[i] == 0) {
+		for (double v : dateGregYear) {
+			if (v == 0) {
 				noEntry++;
 
 			}
@@ -25,11 +25,11 @@ public class Analysis {
 
 	public double autoCorrelGeary() {
 
-		for (int i = 0; i < dateGregYear.length; i++) {
+		IntStream.range(0, dateGregYear.length).forEach(i -> {
 			dateGregYear[i] = CSVReader.storage().get(i).getDateGregYear();
 			xCoordinate[i] = CSVReader.storage().get(i).getxCoord();
 			yCoordinate[i] = CSVReader.storage().get(i).getyCoord();
-		}
+		});
 
 		double degreeSum = 0;
 		double degree = 0;
@@ -50,9 +50,6 @@ public class Analysis {
 		}
 		try {
 			result /= (2 * variance() * degreeSum);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -62,11 +59,11 @@ public class Analysis {
 
 	public double autoCorrelMoran() {
 
-		for (int i = 0; i < dateGregYear.length; i++) {
+		IntStream.range(0, dateGregYear.length).forEach(i -> {
 			dateGregYear[i] = CSVReader.storage().get(i).getDateGregYear();
 			xCoordinate[i] = CSVReader.storage().get(i).getxCoord();
 			yCoordinate[i] = CSVReader.storage().get(i).getyCoord();
-		}
+		});
 
 		double degreeSum = 0;
 		double degree = 0;
@@ -77,9 +74,6 @@ public class Analysis {
 				if (dateGregYear[i] != 0 && dateGregYear[j] != 0) {
 					try {
 						cDiff = ((dateGregYear[i] - average()) * (dateGregYear[j] - average()));
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -95,9 +89,6 @@ public class Analysis {
 		}
 		try {
 			result /= (variance() * degreeSum);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -105,22 +96,22 @@ public class Analysis {
 		return result;
 	}
 
-	public double variance() throws FileNotFoundException, IOException {
+	public double variance() throws IOException {
 		double variance = 0;
-		for (int i = 0; i < dateGregYear.length; i++) {
-			if (dateGregYear[i] != 0) {
+		for (double v : dateGregYear) {
+			if (v != 0) {
 
-				variance += Math.pow(dateGregYear[i] - average(), 2);
+				variance += Math.pow(v - average(), 2);
 			}
 		}
 		return variance /= (dateGregYear.length - noEntry());
 	}
 
-	public double average() throws FileNotFoundException, IOException {
+	public double average() throws IOException {
 		double avgZ = 0;
-		for (int i = 0; i < dateGregYear.length; i++) {
-			if (dateGregYear[i] != 0) {
-				avgZ += (dateGregYear[i]);
+		for (double v : dateGregYear) {
+			if (v != 0) {
+				avgZ += v;
 			}
 		}
 		return avgZ /= (dateGregYear.length - noEntry());

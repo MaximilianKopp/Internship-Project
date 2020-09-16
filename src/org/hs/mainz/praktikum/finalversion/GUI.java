@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -37,42 +38,35 @@ import javafx.scene.Scene;
 
 public class GUI implements ActionListener {
 
-	private JTextField tfForeName;
-	private JTextField tfPatronym;
-	private JTextField tfLastName;
-	private JTextField tfGregFrom;
-	private JTextField tfGregTo;
-	private JTextField tfJewFrom;
-	private JTextField tfJewTo;
-	private JTextArea taCounter;
-	private JTextArea taNotepad;
-	private JTextArea taText;
-	private JButton jbFilter;
-	private JButton jbTotal;
-	private JButton jbChart;
-	private JRadioButton jrbForeName;
-	private JRadioButton jrbLastName;
+	private final JTextField tfForeName;
+	private final JTextField tfPatronym;
+	private final JTextField tfLastName;
+	private final JTextField tfGregFrom;
+	private final JTextField tfGregTo;
+	private final JTextField tfJewFrom;
+	private final JTextField tfJewTo;
+	private final JTextArea taCounter;
+	private final JTextArea taNotepad;
+	private final JTextArea taText;
+	private final JButton jbFilter;
+	private final JButton jbTotal;
+	private final JButton jbChart;
+	private final JRadioButton jrbForeName;
+	private final JRadioButton jrbLastName;
 	private static JRadioButton jrbGender;
-	private JRadioButton jrbYearGreg;
-	private JRadioButton jrbYearJew;
-	private JRadioButton jrbID;
-	private JScrollPane jsNotepad;
-	private JFileChooser jfcFileChooser;
-	private JComponent imagePanel;
+	private final JRadioButton jrbYearGreg;
+	private final JRadioButton jrbYearJew;
+	private final JFileChooser jfcFileChooser;
+	private final JComponent imagePanel;
 	private String output;
 	private JLabel jlImage;
-	private JMenuBar jmbMenuBar;
-	private JMenu jmFile;
-	private JMenu jmAnalysis;
-	private JMenuItem jmiLoadCSV;
-	private JMenuItem jmiLoadWKT;
-	private JMenuItem jmiExportTotal;
-	private JMenuItem jmiExportFilter;
-	private JMenuItem jmiGearyIndex;
-	private JMenuItem jmiMoranIndex;
-	private JMenuItem jmiClose;
-	private JMenuItem jmiStatistics;
-	private ButtonGroup buttonGroup;
+	private final JMenuItem jmiLoadCSV;
+	private final JMenuItem jmiLoadWKT;
+	private final JMenuItem jmiExportTotal;
+	private final JMenuItem jmiExportFilter;
+	private final JMenuItem jmiGearyIndex;
+	private final JMenuItem jmiMoranIndex;
+	private final JMenuItem jmiClose;
 
 	public GUI() {
 		JFrame frame = new JFrame();
@@ -139,7 +133,7 @@ public class GUI implements ActionListener {
 		tfJewTo = new JTextField(10);
 		tfJewTo.setBounds(135, 384, 76, 21);
 
-		jmbMenuBar = new JMenuBar();
+		JMenuBar jmbMenuBar = new JMenuBar();
 		jmiLoadCSV = new JMenuItem("Load CSV-File");
 		jmiLoadCSV.addActionListener(this);
 		jmiLoadWKT = new JMenuItem("Load WKT-File");
@@ -151,7 +145,7 @@ public class GUI implements ActionListener {
 		jmiClose = new JMenuItem("Close");
 		jmiClose.addActionListener(this);
 
-		jmFile = new JMenu("File");
+		JMenu jmFile = new JMenu("File");
 		jmFile.add(jmiLoadCSV);
 		jmFile.add(jmiLoadWKT);
 		jmFile.add(jmiExportTotal);
@@ -162,9 +156,9 @@ public class GUI implements ActionListener {
 		jmiGearyIndex.addActionListener(this);
 		jmiMoranIndex = new JMenuItem("Autocorrelation (Moran-Index)");
 		jmiMoranIndex.addActionListener(this);
-		jmiStatistics = new JMenuItem("Statistics");
+		JMenuItem jmiStatistics = new JMenuItem("Statistics");
 		jmiStatistics.addActionListener(this);
-		jmAnalysis = new JMenu("Analysis");
+		JMenu jmAnalysis = new JMenu("Analysis");
 		jmAnalysis.add(jmiGearyIndex);
 		jmAnalysis.add(jmiMoranIndex);
 		jmAnalysis.add(jmiStatistics);
@@ -183,7 +177,7 @@ public class GUI implements ActionListener {
 		scrollPane_1.setViewportView(taText);
 		taText.setEditable(false);
 
-		jsNotepad = new JScrollPane();
+		JScrollPane jsNotepad = new JScrollPane();
 		jsNotepad.setBounds(1038, 630, 500, 200);
 		jsNotepad.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
@@ -209,10 +203,10 @@ public class GUI implements ActionListener {
 		jrbYearGreg.setBounds(1330, 527, 90, 16);
 		jrbYearJew = new JRadioButton("Date Jew.");
 		jrbYearJew.setBounds(1430, 527, 90, 16);
-		jrbID = new JRadioButton("ID");
+		JRadioButton jrbID = new JRadioButton("ID");
 		jrbID.setBounds(1530, 527, 90, 16);
 
-		buttonGroup = new ButtonGroup();
+		ButtonGroup buttonGroup = new ButtonGroup();
 		buttonGroup.add(jrbForeName);
 		jrbForeName.setActionCommand("Forename");
 		buttonGroup.add(jrbLastName);
@@ -271,14 +265,7 @@ public class GUI implements ActionListener {
 		fxFrame.setLocation(200, 200);
 		fxFrame.getContentPane().add(fxPanel);
 		fxFrame.setVisible(true);
-		Platform.runLater(new Runnable() {
-
-			@Override
-			public void run() {
-				initFXThread(fxPanel);
-
-			}
-		});
+		Platform.runLater(() -> initFXThread(fxPanel));
 	}
 
 	private static void initFXThread(JFXPanel fxPanel) {
@@ -294,18 +281,14 @@ public class GUI implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-						| UnsupportedLookAndFeelException e) {
-					e.printStackTrace();
-				}
-				initAndShowGUI();
+		SwingUtilities.invokeLater(() -> {
+			try {
+				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+					| UnsupportedLookAndFeelException e) {
+				e.printStackTrace();
 			}
+			initAndShowGUI();
 		});
 	}
 
@@ -317,7 +300,7 @@ public class GUI implements ActionListener {
 			filter();
 			try {
 				imagePanel.remove(jlImage);
-				jlImage = new JLabel(new ImageIcon(PointPlotter.drawImage(output, addData())));
+				jlImage = new JLabel(new ImageIcon(PointPlotter.drawImage(addData())));
 				imagePanel.add(jlImage);
 				imagePanel.repaint();
 			} catch (NullPointerException ex) {
@@ -333,7 +316,7 @@ public class GUI implements ActionListener {
 			showTotal();
 			try {
 				imagePanel.remove(jlImage);
-				jlImage = new JLabel(new ImageIcon(PointPlotter.drawImage(output, showTotal())));
+				jlImage = new JLabel(new ImageIcon(PointPlotter.drawImage(showTotal())));
 				imagePanel.add(jlImage);
 				imagePanel.repaint();
 			} catch (NullPointerException ex) {
@@ -348,11 +331,11 @@ public class GUI implements ActionListener {
 		else if (e.getSource() == jmiLoadWKT) {
 			PointPlotter.loadWKT();
 			try {
-				jlImage = new JLabel(new ImageIcon(PointPlotter.drawImage(output, addData())));
+				jlImage = new JLabel(new ImageIcon(PointPlotter.drawImage(addData())));
 				imagePanel.add(jlImage);
 				imagePanel.repaint();
 			} catch (NullPointerException ex) {
-
+				ex.getStackTrace();
 			}
 		}
 
@@ -390,12 +373,12 @@ public class GUI implements ActionListener {
 
 	private List<DataStorage> showTotal() {
 		List<DataStorage> total = new ArrayList<>();
-		Integer counter = 0;
+		int counter = 0;
 
 		for (int i = 0; i < CSVReader.storage().size(); i++) {
 			total.add(CSVReader.storage().get(i));
 			counter++;
-			taCounter.setText(counter.toString());
+			taCounter.setText(Integer.toString(counter));
 		}
 		taCounter.getText();
 		taText.setText(total.toString());
@@ -407,7 +390,7 @@ public class GUI implements ActionListener {
 	private List<DataStorage> addData() {
 		List<DataStorage> filter = new ArrayList<>();
 
-		Integer counter = 0;
+		int counter = 0;
 		for (int i = 0; i < CSVReader.storage().size(); i++) {
 
 			if (!(tfForeName.getText().isEmpty() && tfPatronym.getText().isEmpty() && tfLastName.getText().isEmpty())) {
@@ -454,15 +437,15 @@ public class GUI implements ActionListener {
 			}
 
 			if (jrbForeName.isSelected()) {
-				filter.sort((DataStorage o1, DataStorage o2) -> o1.getForeName().compareTo(o2.getForeName()));
+				filter.sort(Comparator.comparing(DataStorage::getForeName));
 			} else if (jrbLastName.isSelected()) {
-				filter.sort((DataStorage o1, DataStorage o2) -> o1.getLastName().compareTo(o2.getLastName()));
+				filter.sort(Comparator.comparing(DataStorage::getLastName));
 			} else if (jrbYearGreg.isSelected()) {
-				filter.sort((DataStorage o1, DataStorage o2) -> o1.getDateGregYear().compareTo(o2.getDateGregYear()));
+				filter.sort(Comparator.comparing(DataStorage::getDateGregYear));
 			} else if (jrbYearJew.isSelected()) {
-				filter.sort((DataStorage o1, DataStorage o2) -> o1.getDateJewish().compareTo(o2.getDateJewish()));
+				filter.sort(Comparator.comparing(DataStorage::getDateJewish));
 			}
-			taCounter.setText(counter.toString());
+			taCounter.setText(Integer.toString(counter));
 		}
 
 		taCounter.getText();
