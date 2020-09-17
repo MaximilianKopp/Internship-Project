@@ -1,2 +1,2 @@
-# Praxisprojekt_DigitaleMethodik_MKopp
+# Embedded internship project during my masters programme at the University of Mainz
 
